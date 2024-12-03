@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ticket-board:
+    build: 
+      context: ../
+      dockerfile: docker/Dockerfile
+    image: ticket-board
+    container_name: TicketBoard
+    ports:
+      - "5000:5000"
+    volumes:
+      - tickets:/data

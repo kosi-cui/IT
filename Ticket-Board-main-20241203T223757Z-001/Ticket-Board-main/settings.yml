@@ -1,0 +1,9 @@
+colors:
+  accent: '#004c23'  # Replace with your desired color
+  confirm: '#12334c'  # Replace with your desired color
+  cancel: '#f76161'  # Replace with your desired color
+
+scheduling:
+  update: 'hourly'  
+  # Replace with your desired automatic update frequency
+  # Examples: 'hourly', 'daily', 'weekly', 'monthly', 'never'
