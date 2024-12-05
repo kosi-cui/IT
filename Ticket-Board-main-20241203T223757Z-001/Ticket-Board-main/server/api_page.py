@@ -18,7 +18,7 @@ def get_all_reimage_tickets():
     output_raw = requester.filteredTicketGetRequest("tag:Reimage%20AND%20status:<4")
     for ticket in output_raw:
         curr_ticket = {}
-        curr_ticket["title"] = f"#{ticket["id"]} - {format_title(ticket["subject"])}"
+        curr_ticket["title"] = f"#{ticket['id']} - {format_title(ticket['subject'])}"
         curr_ticket["agent"] = requester.getUser(ticket["responder_id"])
         curr_ticket["created_at"] = format_date(ticket["created_at"])
         curr_ticket["tasks"] = get_tasks(ticket["id"], requester)
