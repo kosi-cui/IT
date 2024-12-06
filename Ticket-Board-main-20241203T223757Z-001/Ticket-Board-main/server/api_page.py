@@ -15,15 +15,44 @@ def get_all_reimage_tickets():
     key = os.getenv("API_KEY")
     url = os.getenv("HELPDESK_URL")
     requester = Agent(key, url)
+    
+    # Fetch tickets with the tag 'Reimage' and status < 4
     output_raw = requester.filteredTicketGetRequest("tag:Reimage%20AND%20status:<4")
+    
+    # Ensure output_raw is not empty or invalid
+    if not output_raw:
+        print("No tickets found or there was an issue with the API response.")
+        return output
+
     for ticket in output_raw:
         curr_ticket = {}
-        curr_ticket["title"] = f"#{ticket['id']} - {format_title(ticket['subject'])}"
-        curr_ticket["agent"] = requester.getUser(ticket["responder_id"])
-        curr_ticket["created_at"] = format_date(ticket["created_at"])
-        curr_ticket["tasks"] = get_tasks(ticket["id"], requester)
+        
+        # Safely get ticket details, handle missing data gracefully
+        curr_ticket["title"] = f"#{ticket.get('id', 'N/A')} - {format_title(ticket.get('subject', 'No Subject'))}"
+        
+        # Ensure that 'responder_id' exists before trying to fetch user
+        responder_id = ticket.get("responder_id")
+        if responder_id:
+            curr_ticket["agent"] = requester.getUser(responder_id)
+        else:
+            curr_ticket["agent"] = "Unknown Agent"
+        
+        # Format creation date safely
+        created_at = ticket.get("created_at")
+        curr_ticket["created_at"] = format_date(created_at) if created_at else "Unknown Date"
+        
+        # Safely retrieve tasks for the ticket
+        ticket_id = ticket.get("id")
+        if ticket_id:
+            curr_ticket["tasks"] = get_tasks(ticket_id, requester)
+        else:
+            curr_ticket["tasks"] = "No Tasks"
+        
+        # Add the current ticket to the output list
         output.append(curr_ticket)
+    
     return output
+
 
 
 def ticket_get(ticket_id: int):
