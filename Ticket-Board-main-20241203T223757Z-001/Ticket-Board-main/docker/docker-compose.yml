@@ -1,12 +1,18 @@
 version: '3'
+
 services:
   ticket-board:
-    build: 
-      context: ../
-      dockerfile: docker/Dockerfile
-    image: ticket-board
-    container_name: TicketBoard
+    build:
+      context: ../  # Context is the directory where your Dockerfile is located
+      dockerfile: docker/Dockerfile  # Path to your Dockerfile
+    image: ticket-board  # Image name for this container
+    container_name: TicketBoard  # Custom name for the container
     ports:
-      - "5000:5000"
+      - "5000:5000"  # Exposes port 5000 to the host machine
     volumes:
-      - tickets:/data
+      - tickets:/data  # Mounts a volume for persistent storage (if needed)
+    env_file:
+      - .env  # Specifies the .env file to load environment variables from
+
+volumes:
+  tickets:  # Persistent volume
