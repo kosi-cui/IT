@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory, request, jsonify
 import os
 import subprocess
 import unittest
@@ -45,11 +45,13 @@ def home(path):
 # API Routes
 @app.route('/api/ticket/<int:ticket_id>')
 def api_req(ticket_id):
-    return api.ticket_get(ticket_id)
+    result = api.ticket_get(ticket_id)
+    return jsonify(result)  # Ensure the return is JSON
 
 @app.route('/api/reimage_tickets')
 def reimage_tickets():
-    return api.get_all_reimage_tickets()
+    result = api.get_all_reimage_tickets()
+    return jsonify(result)  # Ensure the return is JSON
 
 
 # Main
@@ -66,7 +68,6 @@ def validCredentials():
     url = helpdesk_url + '/api/v2/tickets.json'
     response = requests.get(url, auth=(api_key, "X"))
     return response.status_code == 200    
-
 
 def run():
     # Check if the script is running inside a Docker container
