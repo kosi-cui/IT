@@ -9,6 +9,18 @@ from dotenv import load_dotenv
 from server import api_page as api
 from server import settings
 
+# Load environment variables
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')  # Get API_KEY from the .env file
+HELPDESK_URL = os.getenv('HELPDESK_URL')  # Get HELPDESK_URL from the .env file
+
+# Ensure the API_KEY and HELPDESK_URL are loaded properly
+if not API_KEY or not HELPDESK_URL:
+    print("Missing environment variables: API_KEY or HELPDESK_URL")
+else:
+    print("API Key and Helpdesk URL loaded successfully.")
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -67,7 +79,11 @@ def validCredentials():
     helpdesk_url = os.getenv('HELPDESK_URL')
     url = helpdesk_url + '/api/v2/tickets.json'
     response = requests.get(url, auth=(api_key, "X"))
-    return response.status_code == 200    
+    if response.status_code == 200:
+        return True
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return False    
 
 def run():
     # Check if the script is running inside a Docker container
